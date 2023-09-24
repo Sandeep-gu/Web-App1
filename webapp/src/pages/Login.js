@@ -7,17 +7,30 @@ import Swal from 'sweetalert2'
 function Login() {
   const navigate = useNavigate()
   const [logindata,setLoginData] = useState({'email':'','password':''})
+  const [loading,setLoading] = useState(false)
   const handleLoginbtn = (e)=>{
     e.preventDefault();
     console.log(logindata)
+    setLoading(true)
+    if(localStorage.getItem('token')){
+      setLoading(false)
+        Swal.fire({
+          icon:'success',
+          title:'You have already logged in'
+        })
+    }
+    else{
     axios.post(`${CONFIG_API}/loginuser`,logindata)
-
+    
     .then(response=>{
       if(response){
+        setLoading(false)
+        
         Swal.fire({
           icon:'success',
           title:'Successfully logged in'
         })
+        
         console.log(response)
         localStorage.setItem("token",response.data.token)
         localStorage.setItem("user",JSON.stringify(response.data.user))
@@ -25,19 +38,28 @@ function Login() {
 
       }
       else{
+        setLoading(false)
         Swal.fire({
           icon:'error',
           title:'logged in Failed'
         })
       }
     }).catch(error=>{
+      setLoading(false)
       console.log(error)
     })
-    
+  }
     
   }
   return (
-    <div>
+          <div>
+          {loading?
+          <div className='text-center my-4'>
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+          </div>
+          </div>:""}
+          
         <h1 className='text-center mt-5'>LOGIN FORM</h1>
         <form  className='container shadow mt-5 py-4 rounded' onSubmit={(e)=>handleLoginbtn(e)}>
             <label htmlFor='email' className='mt-2 textColor'>Email</label>
