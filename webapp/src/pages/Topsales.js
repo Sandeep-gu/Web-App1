@@ -1,9 +1,24 @@
 import React from 'react'
+import axios from 'axios';
+import {CONFIG_API} from '../config.js'
+import {useEffect,useState} from 'react'
 
 function Topsales() {
+  const [salesdata,setSalesData] = useState('');
+
+  useEffect(()=>{
+    handleAllSalesData();
+  },[])
+  const handleAllSalesData =()=>{
+    axios.get(`${CONFIG_API}/allposts`)
+    .then(response =>{
+      console.log(response.data.post)
+      setSalesData(response.data.post)
+    });
+  }
   return (
     //showing top 5 product in the table and heading name is #, id,quantity,amount
-    <div>
+    <div className="container">
         <h1 className='text-center my-5'>TOP 5 SALES</h1>
         <div className='container'>
         <table class="table table-hover">
@@ -18,41 +33,20 @@ function Topsales() {
     </tr>
   </thead>
   <tbody class="table-group-divider">
-    <tr>
-      <th scope="row">1</th>
-      <td>S1212</td>
-      <td>Laptop</td>
-      <td>2</td>
-      <td>90000</td>
+  {
+    salesdata?salesdata.map((data,index)=>{
+      return(
+        <tr>
+          <th scope="row">{index}</th>
+          <td>{data._id}</td>
+          <td>{data.ProductName}</td>
+          <td>{data.Quantity}</td>
+          <td>{data.Amount}</td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>S1213</td>
-      <td>Mobile</td>
-      <td>4</td>
-      <td>80000</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>S1216</td>
-      <td>Desktop</td>
-      <td>2</td>
-      <td>100000</td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td>S1217</td>
-      <td>Tablet</td>
-      <td>2</td>
-      <td>40000</td>
-    </tr>
-    <tr>
-      <th scope="row">5</th>
-      <td>S1218</td>
-      <td>iPhone</td>
-      <td>2</td>
-      <td>90000</td>
-    </tr>
+      )
+    }):""
+  }
+    
   </tbody>
 </table>
         </div>

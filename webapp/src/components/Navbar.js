@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 //IMPORTED CSS FILE NAVBAR.CSS
 import "./Navbar.css";
-function Navbar() {
+import { useNavigate } from "react-router-dom";
+function Navbar(props) {
+  const navigate = useNavigate();
+  const handleLogOutbtn=()=>{
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    navigate('/login')
+
+  }
+  
   return (
     //CREATE NAVBAR WITH THE ADD SALES,TOP SALES,TODAY'S TOTAL, REVENUE,LOGIN,RESISTER,LOGOUT AND ADD GOOGLE FONT WITH CLASSNAME IS NAVBAR-TXT
     <div className="navbar-txt">
-      <nav class="navbar navbar-expand-lg bg-primary">
+      <nav class="navbar navbar-expand-lg bg-primary w-100">
         <div class="container-fluid">
+        <button type="button" className="navbar-toggler" onClick={props.togglebutton}><span class="navbar-toggler-icon"></span></button>
        
           <a class="navbar-brand fs-4 text-white" href="/">
             SALES APP
@@ -57,7 +67,7 @@ function Navbar() {
               </li>
               
               <li class="nav-item">
-                <a class="nav-link text-white" href="/">
+                <a class="nav-link text-white" onClick={handleLogOutbtn}>
                   LOGOUT
                 </a>
               </li>
